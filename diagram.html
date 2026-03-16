@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a2e1c;
+      font-family: 'DM Sans', 'Segoe UI', sans-serif;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh; padding: 2rem;
+    }
+    h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      color: #6abf8a; font-size: 1.2rem;
+      letter-spacing: 0.02em; margin-bottom: 0.4rem; text-align: center;
+    }
+    p.sub {
+      font-size: 0.72rem; color: rgba(255,255,255,0.4);
+      text-align: center; margin-bottom: 1.5rem;
+    }
+    svg { max-width: 900px; width: 100%; }
+
+    /* Node styles */
+    .node-fungus rect   { fill: rgba(26,92,56,0.85);  stroke: #6abf8a; stroke-width: 1.5; rx: 6; }
+    .node-bacteria rect { fill: rgba(14,116,144,0.7); stroke: #7dd3fc; stroke-width: 1.5; }
+    .node-modified rect { stroke-width: 2.5; stroke-dasharray: none; }
+    .node-label { font-size: 10px; fill: #fff; font-style: italic; }
+    .node-role  { font-size: 8px;  fill: rgba(255,255,255,0.55); }
+    .mod-badge  { font-size: 7px; fill: #fcd34d; font-weight: 700; }
+
+    /* Edge styles */
+    .edge-hg   { stroke: #fcd34d; stroke-width: 2; stroke-dasharray: 5,3; fill: none; }
+    .edge-hyph { stroke: #6abf8a; stroke-width: 1.5; fill: none; opacity: 0.6; }
+    .edge-syn  { stroke: #7dd3fc; stroke-width: 1.5; fill: none; opacity: 0.5; }
+    .edge-compat { stroke: #c4b5fd; stroke-width: 1.5; stroke-dasharray: 3,3; fill: none; opacity: 0.5; }
+
+    /* Legend */
+    .legend-item text { font-size: 9px; fill: rgba(255,255,255,0.6); }
+
+    /* Tooltip */
+    #tooltip {
+      position: fixed; background: rgba(10,46,28,0.97);
+      border: 1px solid rgba(106,191,138,0.3); border-radius: 8px;
+      padding: 8px 12px; font-size: 11px; color: #fff;
+      pointer-events: none; opacity: 0; transition: opacity 0.15s;
+      max-width: 220px; line-height: 1.5; z-index: 100;
+    }
+    #tooltip strong { color: #6abf8a; display: block; margin-bottom: 3px; }
+    #tooltip .role  { color: rgba(255,255,255,0.55); font-size: 10px; }
+  </style>
+</head>
+<body>
+<h2>Inter-Species Compatibility Map</h2>
+<p class="sub">Hover nodes for detail · Dashed yellow = Hg² cascade · Green = fungal highways · Blue = synergistic pairs · Purple = compatibility edits</p>
+
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" id="diagram">
+  <defs>
+    <marker id="arr-hg"    markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#fcd34d"/></marker>
+    <marker id="arr-hyph"  markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#6abf8a"/></marker>
+    <marker id="arr-syn"   markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#7dd3fc"/></marker>
+    <marker id="arr-compat" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#c4b5fd"/></marker>
+  </defs>
+
+  <!-- ═══ MERCURY CASCADE (yellow dashed, left spine) ═══ -->
+  <!-- Step 1 → 2 -->
+  <path class="edge-hg" marker-end="url(#arr-hg)"
+        d="M 160,105 L 160,165"/>
+  <!-- Step 2 → 3 -->
+  <path class="edge-hg" marker-end="url(#arr-hg)"
+        d="M 160,215 L 160,275"/>
+  <!-- Step 3 → 4 -->
+  <path class="edge-hg" marker-end="url(#arr-hg)"
+        d="M 160,325 L 160,385"/>
+
+  <!-- ═══ FUNGAL HIGHWAYS ═══ -->
+  <!-- F. oxysporum → Pseudomonas -->
+  <path class="edge-hyph" marker-end="url(#arr-hyph)"
+        d="M 460,195 C 560,195 620,280 620,300"/>
+  <!-- Trichoderma → Pseudomonas -->
+  <path class="edge-hyph" marker-end="url(#arr-hyph)"
+        d="M 460,395 C 560,395 620,360 620,340"/>
+  <!-- Trichoderma → Dehalococcoides -->
+  <path class="edge-hyph" marker-end="url(#arr-hyph)"
+        d="M 460,395 C 560,430 700,430 750,410"/>
+
+  <!-- ═══ SYNERGISTIC PAIRS (blue) ═══ -->
+  <!-- P.chrysosporium ↔ T.versicolor -->
+  <path class="edge-syn" marker-end="url(#arr-syn)"
+        d="M 460,105 C 510,130 510,170 460,195"/>
+  <!-- T.versicolor ↔ B.adusta -->
+  <path class="edge-syn" marker-end="url(#arr-syn)"
+        d="M 460,195 C 510,220 510,260 460,285"/>
+  <!-- Pseudomonas → Dehalococcoides -->
+  <path class="edge-syn" marker-end="url(#arr-syn)"
+        d="M 680,320 L 750,370"/>
+  <!-- C.metallidurans → A.niger cascade -->
+  <path class="edge-syn" marker-end="url(#arr-syn)"
+        d="M 200,290 L 120,340"/>
+
+  <!-- ═══ COMPATIBILITY EDITS (purple dashed) ═══ -->
+  <!-- Trichoderma ↔ white-rot fungi (peptaibol deletion) -->
+  <path class="edge-compat" marker-end="url(#arr-compat)"
+        d="M 430,375 C 420,320 430,270 430,255"/>
+  <!-- Penicillium → bacteria (pcb deletion) -->
+  <path class="edge-compat" marker-end="url(#arr-compat)"
+        d="M 460,490 C 580,490 630,380 640,345"/>
+
+  <!-- ════════════════════════════════════════════════
+       NODES — Fungi (left column) + Bacteria (right)
+       ════════════════════════════════════════════════ -->
+
+  <!-- M. robertsii (ΔMIR) — Hg cascade step 1 -->
+  <g class="node-fungus node-modified"
+     data-name="Metarhizium robertsii (ΔMIR)"
+     data-role="MeHg demethylation — step 1 of Hg cascade"
+     data-detail="MMD converts MeHg → Hg²⁺. MIR deleted to block Hg⁰ volatilization. Also a plant root symbiont — can be delivered via seed coating."
+     transform="translate(70,70)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">M. robertsii</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">MeHg demethylation</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle">★ ΔMIR · Hg cascade ①</text>
+  </g>
+
+  <!-- C. metallidurans (ΔmerA) — Hg cascade step 2 -->
+  <g class="node-bacteria node-modified"
+     data-name="Cupriavidus metallidurans (ΔmerA)"
+     data-role="Hg²⁺ export — step 2 of Hg cascade"
+     data-detail="CusA-Hg / CusF-Hg efflux pumps export Hg²⁺ extracellularly. ΔmerA removes volatilization. Also handles Zn, Co, Cd, Ni, Pb, Cu via megaplasmids pMOL28/pMOL30."
+     transform="translate(70,165)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">C. metallidurans</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">Multi-metal resistance + Hg²⁺ export</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle">★ ΔmerA + CusA/F-Hg · Hg cascade ②</text>
+  </g>
+
+  <!-- A. niger (Atx1-Hg) — Hg cascade step 3+4 -->
+  <g class="node-fungus node-modified"
+     data-name="Aspergillus niger (Atx1-Hg + MT2A)"
+     data-role="Hg²⁺ capture &amp; sequestration — steps 3+4"
+     data-detail="Atx1-Hg captures extracellular Hg²⁺ and shuttles it to MT2A intracellularly. Terminal sink of the cascade. Also achieves 8× arsenic removal vs. chemical treatment."
+     transform="translate(70,270)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">A. niger</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">Hg²⁺ capture + arsenic</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle">★ Atx1-Hg + MT2A · Hg cascade ③④</text>
+  </g>
+
+  <!-- S. pasteurii — metal locking -->
+  <g class="node-bacteria"
+     data-name="Sporosarcina pasteurii"
+     data-role="Metal immobilization via MICP"
+     data-detail="Urease drives carbonate precipitation, locking metals (Cd 95%, Zn 97%, Cr 98%, Pb 84%) into stable mineral phases. Unique: the only organism that physically immobilizes metals in situ."
+     transform="translate(70,380)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">S. pasteurii</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">MICP metal locking</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle" fill="rgba(255,255,255,0.35)">Wild-type</text>
+  </g>
+
+  <!-- P. chrysosporium -->
+  <g class="node-fungus"
+     data-name="Phanerochaete chrysosporium"
+     data-role="PAHs, chlorinated solvents, dioxins, TNT"
+     data-detail="Primary enzymatic workhorse. LiP, MnP, laccase, CYP450. Synergistic with T. versicolor and B. adusta for pharmaceuticals. MnP diffuses into soil — reaches pollutants without direct contact."
+     transform="translate(360,70)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">P. chrysosporium</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">PAHs · chlorinated · dioxins</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle" fill="rgba(255,255,255,0.35)">Wild-type</text>
+  </g>
+
+  <!-- T. versicolor -->
+  <g class="node-fungus"
+     data-name="Trametes versicolor"
+     data-role="Pharmaceuticals, EDCs"
+     data-detail="&gt;20× laccase activity vs. most fungi. Degrades diclofenac ≥94% in 1h. Synergistic with P. chrysosporium for antidepressants (fluoxetine, citalopram). Works without fresh biomass addition in fed-batch mode."
+     transform="translate(360,165)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">T. versicolor</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">Pharmaceuticals · EDCs</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle" fill="rgba(255,255,255,0.35)">Wild-type</text>
+  </g>
+
+  <!-- B. adusta -->
+  <g class="node-fungus"
+     data-name="Bjerkandera adusta"
+     data-role="Pharma / EDC specialist"
+     data-detail="Versatile peroxidase (VP) with broadest substrate spectrum of any white-rot peroxidase. 100% diclofenac at very low enzyme concentrations. Works synergistically with P. chrysosporium."
+     transform="translate(360,260)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">B. adusta</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">Pharma / EDC deep specialist</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle" fill="rgba(255,255,255,0.35)">Wild-type</text>
+  </g>
+
+  <!-- Trichoderma (modified) -->
+  <g class="node-fungus node-modified"
+     data-name="Trichoderma spp."
+     data-role="Arsenic, metals, LDPE, structural scaffold"
+     data-detail="Extensive hyphal network serves as highway for bacteria. Peptaibol synthetase + chitinase + protease deletions prevent co-species killing. Hyperaccumulates arsenic with A. niger (8× chemical treatment)."
+     transform="translate(360,360)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">Trichoderma spp.</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">Scaffold · arsenic · LDPE</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle">★ Δpeptaibols + Δchitinases</text>
+  </g>
+
+  <!-- F. oxysporum (modified) -->
+  <g class="node-fungus node-modified"
+     data-name="Fusarium oxysporum"
+     data-role="Dioxins + fungal highway"
+     data-detail="CYP450 (cytosolic + mitochondrial) for dioxins. Hyphae serve as highways for hydrocarbon-degrading bacteria. SIX effector + FTF1/FTF2 deletions remove pathogenicity."
+     transform="translate(360,165)" style="display:none">
+  </g>
+
+  <!-- P. chrysogenum (modified) -->
+  <g class="node-fungus node-modified"
+     data-name="Penicillium chrysogenum"
+     data-role="Pb, Cd, phenols"
+     data-detail="Exceptional Pb concentrator via lead oxalate precipitation. Pcb cluster deleted to eliminate penicillin production that would otherwise kill bacterial consortium members."
+     transform="translate(360,455)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">P. chrysogenum</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">Pb · Cd · phenols</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle">★ Δpcb cluster</text>
+  </g>
+
+  <!-- Pseudomonas -->
+  <g class="node-bacteria"
+     data-name="Pseudomonas spp."
+     data-role="BTEX, petroleum hydrocarbons"
+     data-detail="Primary BTEX degrader. Rhamnolipid biosurfactants increase pollutant bioavailability for all consortium members. Colonizes fungal hyphae as highways. 81% petroleum removal in 35 days."
+     transform="translate(595,295)">
+    <rect width="180" height="50" rx="6"/>
+    <text class="node-label" x="90" y="18" text-anchor="middle" font-style="italic">Pseudomonas spp.</text>
+    <text class="node-role"  x="90" y="30" text-anchor="middle">BTEX · petroleum</text>
+    <text class="mod-badge"  x="90" y="44" text-anchor="middle" fill="rgba(255,255,255,0.35)">Wild-type</text>
+  </g>
+
+  <!-- Dehalococcoides -->
+  <g class="node-bacteria"
+     data-name="Dehalococcoides spp."
+     data-role="TCE/PCE → non-toxic ethene"
+     data-detail="Only organism capable of full reductive dechlorination to non-toxic ethene. Strictly anaerobic — thrives in reducing subsurface zones. Requires H₂ from fermenting partners. Must have both vcrA and tceA to avoid vinyl chloride stalling."
+     transform="translate(710,365)">
+    <rect width="175" height="50" rx="6"/>
+    <text class="node-label" x="87" y="18" text-anchor="middle" font-style="italic">Dehalococcoides spp.</text>
+    <text class="node-role"  x="87" y="30" text-anchor="middle">TCE/PCE → ethene</text>
+    <text class="mod-badge"  x="87" y="44" text-anchor="middle" fill="rgba(255,255,255,0.35)">Wild-type · anaerobic</text>
+  </g>
+
+  <!-- ═══ LEGEND ═══ -->
+  <g transform="translate(30, 555)">
+    <line x1="0" y1="8" x2="30" y2="8" stroke="#fcd34d" stroke-width="2" stroke-dasharray="5,3"/>
+    <text class="legend-item" x="36" y="12">Mercury cascade (Hg²⁺ trafficking)</text>
+
+    <line x1="200" y1="8" x2="230" y2="8" stroke="#6abf8a" stroke-width="1.5"/>
+    <text class="legend-item" x="236" y="12">Fungal highway (bacterial dispersal)</text>
+
+    <line x1="420" y1="8" x2="450" y2="8" stroke="#7dd3fc" stroke-width="1.5"/>
+    <text class="legend-item" x="456" y="12">Synergistic pair</text>
+
+    <line x1="560" y1="8" x2="590" y2="8" stroke="#c4b5fd" stroke-width="1.5" stroke-dasharray="3,3"/>
+    <text class="legend-item" x="596" y="12">Compatibility edit</text>
+
+    <rect x="730" y="0" width="12" height="12" fill="rgba(26,92,56,0.85)" stroke="#6abf8a" stroke-width="1.5" rx="2"/>
+    <text class="legend-item" x="748" y="10">Fungus</text>
+
+    <rect x="800" y="0" width="12" height="12" fill="rgba(14,116,144,0.7)" stroke="#7dd3fc" stroke-width="1.5" rx="2"/>
+    <text class="legend-item" x="818" y="10">Bacterium</text>
+  </g>
+</svg>
+
+<div id="tooltip"></div>
+
+<script>
+  const tooltip = document.getElementById('tooltip');
+  document.querySelectorAll('[data-name]').forEach(node => {
+    node.style.cursor = 'pointer';
+    node.addEventListener('mouseenter', e => {
+      tooltip.innerHTML = `<strong>${node.dataset.name}</strong>
+        <span class="role">${node.dataset.role}</span><br><br>
+        ${node.dataset.detail}`;
+      tooltip.style.opacity = '1';
+    });
+    node.addEventListener('mousemove', e => {
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top  = (e.clientY - 10) + 'px';
+    });
+    node.addEventListener('mouseleave', () => {
+      tooltip.style.opacity = '0';
+    });
+  });
+</script>
+</body>
+</html>

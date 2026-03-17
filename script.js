@@ -32,13 +32,6 @@ function filterSpecies(filter, btn) {
   });
 }
 
-// Nav logo crossfade toggle (mobile)
-function toggleNavLogo() {
-  if (window.innerWidth <= 700) {
-    document.getElementById("navLogo").classList.toggle("flipped");
-  }
-}
-
 // Scroll active state — targets both link sets
 window.addEventListener("scroll", () => {
   let current = "";

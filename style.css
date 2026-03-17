@@ -1010,19 +1010,25 @@ footer strong {
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1100px) {
-	
+
+	nav {
+    	/* Ensures the logo container itself is centered in the navbar */
+    	display: flex;
+    	justify-content: center;
+    	padding: 1rem 0; 
+	}
+
 	.nav-logo {
     	display: flex;
-    	flex-direction: column; /* Stacks the text vertically */
-    	align-items: flex-start; /* Aligns text to the left */
-    	gap: 2px; /* Adds a small space between lines */
+    	flex-direction: column; /* Stacks the two lines of text */
+    	align-items: center;    /* Centers the lines relative to each other */
+		text-align: center;     /* Ensures text alignment is centered */
 	}
 
 	#navSub {
-    	display: block !important; /* Forces the element to be visible */
-    	font-size: 0.7rem; /* Shrinks the text slightly for mobile screens */
-    	opacity: 0.8; /* Optional: makes it look like a sub-header */
-    	line-height: 1.2;
+    	display: block !important; /* Ensures the sub-text is visible on mobile */
+    	font-size: 0.75rem;
+    	margin-top: 2px;
 	}
 
 	.hero {

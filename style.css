@@ -42,7 +42,7 @@ body {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	align-items: center;
-	padding: 5rem 6rem 5rem;
+	padding: 1rem 6rem 5rem;
 	position: relative;
 	overflow: hidden;
 }

@@ -39,53 +39,10 @@ function toggleNavLogo() {
   }
 }
 
-// Nav overflow → dropdown
-const navLinksList = document.querySelector(".nav-links");
-const navDropdown = document.getElementById("navDropdown");
-const nav = document.querySelector("nav");
-
-function checkNavOverflow() {
-  // Temporarily force links visible to measure them
-  navLinksList.style.display = "flex";
-  navDropdown.style.display = "none";
-
-  const navRight = nav.getBoundingClientRect().right;
-  const linksRight = navLinksList.getBoundingClientRect().right;
-
-  if (linksRight > navRight - 8) {
-    navLinksList.style.display = "none";
-    navDropdown.style.display = "block";
-  }
-}
-
-function toggleDropdown() {
-  document.getElementById("navDropdownMenu").classList.toggle("open");
-}
-
-function closeDropdown() {
-  document.getElementById("navDropdownMenu").classList.remove("open");
-}
-
-// Close dropdown when clicking outside
-document.addEventListener("click", (e) => {
-  if (navDropdown && !navDropdown.contains(e.target)) closeDropdown();
-});
-
-checkNavOverflow();
-window.addEventListener("resize", checkNavOverflow);
-
 // Scroll active state — targets both link sets
 window.addEventListener("scroll", () => {
   let current = "";
   document.querySelectorAll("section[id]").forEach((s) => {
     if (window.scrollY >= s.offsetTop - 100) current = s.id;
   });
-  document
-    .querySelectorAll(".nav-links a, .nav-dropdown-menu a")
-    .forEach((a) => {
-      a.style.color =
-        a.getAttribute("href") === "#" + current
-          ? "var(--gl)"
-          : "rgba(255,255,255,0.55)";
-    });
 });

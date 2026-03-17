@@ -86,7 +86,6 @@ nav {
 
 	#navLogo.flipped #navMain {
 		opacity: 0;
-		position: absolute;
 		pointer-events: none;
 	}
 
@@ -96,7 +95,6 @@ nav {
 
 	#navLogo:not(.flipped) #navSub {
 		opacity: 0;
-		position: absolute;
 		pointer-events: none;
 	}
 

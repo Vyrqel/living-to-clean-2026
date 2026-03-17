@@ -35,32 +35,6 @@ body {
 	overflow-x: hidden;
 }
 
-/* ── NAV ── */
-nav {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	z-index: 100;
-	background: rgba(10, 46, 28, 0.92);
-	backdrop-filter: blur(12px);
-	border-bottom: 1px solid rgba(106, 191, 138, 0.15);
-	padding: 0 2rem;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	height: 56px;
-}
-
-.nav-logo {
-	font-family: "DM Serif Display", serif;
-	font-size: 1rem;
-	color: var(--gl);
-	letter-spacing: 0.01em;
-	position: relative;
-	white-space: nowrap;
-}
-
 /* ── HERO ── */
 .hero {
 	min-height: 100vh;
